@@ -1,0 +1,36 @@
+header {
+    background-color: darkblue;
+    height: 100px;
+}
+
+h1 {
+    color: white;
+    text-align: center;
+    padding-top: 25px;
+}
+
+#current-weather, #five-day {
+    border: 1px black solid;
+    height: 40vh;
+    padding: 10px;
+    margin: 10px;
+}
+
+#search {
+    border: 1px black solid;
+    height: 20vh;
+    padding: 10px;
+    margin: 10px;
+}
+
+#search-history {
+    border: 1px black solid;
+    height: 60vh;
+    padding: 10px;
+    margin: 10px;
+}
+
+
+#search-history-element {
+    list-style: none;
+}

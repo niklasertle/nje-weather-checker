@@ -3,12 +3,36 @@
   <head></head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel='stylesheet' href='./assets/css/style.css'>
     <title>Weather Dashboard</title>
   </head>
   <body>
-
+    <header>
+      <h1>Weather Dashboard</h1>
+    </header>
+    <div class='row'>
+      <div class='col-3' id='side-bar'>
+        <div id='search'>
+          <h2>Search for a City:</h2>
+          <form id='form-el'>
+            <input id='search-input' type="text" placeholder="Your city here...">
+          </form>
+        </div>
+        <div id='search-history'>
+          <h2>History:</h2>
+          <ul id='search-history-element'></ul>
+        </div>
+      </div>
+      <div class='col-9' id='main'>
+        <div id='current-weather'>
+          <p>what is today like?</p>
+        </div>
+        <div id='five-day'>
+          <p>What about the next five?</p>
+        </div>
+      </div>
+    </div>
 
     
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
