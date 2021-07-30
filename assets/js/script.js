@@ -21,6 +21,7 @@ var getLocation = function (event) {
         var lon = data.coord.lon;
         getWeather(lat, lon);
     });
+    $("#form-el").trigger("reset")
 };
 
 // Uses the lat and lon to get the forecast for the location searched
@@ -42,8 +43,9 @@ function getWeather(lat, lon) {
 function searchHistory(city) {
     const cityHistory = JSON.parse(localStorage.getItem('history')) || [];
     addToHistory(city);
-    cityHistory.push(city);
-    cityHistory.splice(9);
+    cityHistory.unshift(city);
+    cityHistory.splice(10);
+    deleteFromHistory(cityHistory);
     localStorage.setItem('history', JSON.stringify(cityHistory));
 };
 
@@ -53,17 +55,28 @@ function displayHistory(searchHistory) {
         const listItem = $('<li>');
         const btnItem = $('<button>' + element + '</button>');
         btnItem.addClass('btn history-btn');
+        btnItem.attr('data-city', element);
         btnItem.appendTo(listItem);
         listItem.appendTo(searchHistoryEl);
     });
 };
 
+// Displays a new city when searched
 function addToHistory(city) {
     const listItem = $('<li>');
     const btnItem = $('<button>' + city + '</button>');
     btnItem.addClass('btn history-btn');
+    btnItem.attr('data-city', city);
     btnItem.appendTo(listItem);
-    listItem.appendTo(searchHistoryEl);
+    listItem.prependTo(searchHistoryEl);
+};
+
+// Removes the last item from the search history if it is over 10 items long
+function deleteFromHistory(cityList) {
+    console.log(cityList.length);
+    if (cityList.length >= 10) {
+        $('#search-history-element li:last-child').remove();;
+    }
 };
 
 $('#form-el').submit(getLocation);
