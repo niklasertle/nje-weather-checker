@@ -34,3 +34,7 @@ h1 {
 #search-history-element {
     list-style: none;
 }
+
+.history-btn {
+    margin: 5px;
+}

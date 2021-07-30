@@ -39,13 +39,36 @@ function getWeather(lat, lon) {
 };
 
 // Save search to localStorage, delete at 10 cities
-// Display search history from localStorage, buttons to be able to search again
 function searchHistory(city) {
-    console.log(city);
+    const cityHistory = JSON.parse(localStorage.getItem('history')) || [];
+    addToHistory(city);
+    cityHistory.push(city);
+    cityHistory.splice(9);
+    localStorage.setItem('history', JSON.stringify(cityHistory));
+};
 
-}
+// Display search history from localStorage, with buttons to be able to search again
+function displayHistory(searchHistory) {
+    searchHistory.forEach(element => {
+        const listItem = $('<li>');
+        const btnItem = $('<button>' + element + '</button>');
+        btnItem.addClass('btn history-btn');
+        btnItem.appendTo(listItem);
+        listItem.appendTo(searchHistoryEl);
+    });
+};
+
+function addToHistory(city) {
+    const listItem = $('<li>');
+    const btnItem = $('<button>' + city + '</button>');
+    btnItem.addClass('btn history-btn');
+    btnItem.appendTo(listItem);
+    listItem.appendTo(searchHistoryEl);
+};
 
 $('#form-el').submit(getLocation);
+displayHistory(JSON.parse(localStorage.getItem('history'))  || []);
 
 // Display current weather
 // Display 5 day forecast
+// What if input is 2 words?
