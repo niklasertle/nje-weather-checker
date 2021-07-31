@@ -26,8 +26,15 @@
       </div>
       <div class='col-9' id='main'>
         <div id='current-weather'>
-          <h2>Current Forecast:</h2>
-          <div id='current-weather-el'></div>
+          <h2>Current Weather:</h2>
+          <div id='current-weather-el'>
+            <h3 id='current-city-name'></h3>
+            <img id='weather-icon' src=''></img>
+            <h5 id='current-temp'></h5>
+            <h5 id='current-wind'></h5>
+            <h5 id='current-humidity'></h5>
+            <h5 id='current-uvindex'></h5>
+          </div>
         </div>
         <div id='five-day'>
           <h2>Five Day Forecast:</h2>
@@ -38,6 +45,7 @@
 
     
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src='./assets/js/script.js'></script>
