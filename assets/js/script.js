@@ -1,6 +1,5 @@
 var searchInput = $('#search-input');
 var searchHistoryEl = $('#search-history-element');
-var fiveDayEl = $('#five-day-el');
 
 // Gets the lat and lon of the location from Open Weather API when input into the search box
 var getLocation = function (event) {
@@ -38,7 +37,7 @@ function getWeather(lat, lon, city) {
             return response.json();
         }
     }).then(function (data) {
-        displayCurrentWeather(data.daily[0], city);
+        displayCurrentWeather(data.current, city);
         displayFiveDay(data,city)
     });
 };
@@ -84,28 +83,62 @@ function deleteFromHistory(cityList) {
 
 // Displays the current weather for the selected city into the current forecast box
 function displayCurrentWeather(data, city) {
-    var weatherIcon = $('#weather-icon')
-    var currentTime = moment().format('MMM/do/YYYY');
+    var weatherIcon = $('#weather-icon');
     
     // City(date)
-    $('#current-city-name').text(city + ' (' + currentTime + ')')
+    var dateCode = new Date(data.dt * 1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    var month = months[dateCode.getMonth()];
+    var date = dateCode.getDate();
+    var year = dateCode.getFullYear();
+    var currentDay = month + '/' + date + '/' + year;
+    $('#current-city-name').text(city + ' (' + currentDay + ')');
     // Weather Icon
-    var iconCode = data.weather[0].icon
-    var iconSRC = "http://openweathermap.org/img/w/" + iconCode + ".png"
-    weatherIcon.attr('src', iconSRC)
+    var iconCode = data.weather[0].icon;
+    var iconSRC = "http://openweathermap.org/img/w/" + iconCode + ".png";
+    weatherIcon.attr('src', iconSRC);
     // Temp
-    $('#current-temp').text('Temperate: ' + data.temp.day + ' °F')
+    $('#current-temp').text('Temperate: ' + data.temp + ' °F');
     // Wind
-    $('#current-wind').text('Wind: ' + data.wind_speed + ' MPH')
+    $('#current-wind').text('Wind: ' + data.wind_speed + ' MPH');
     // Humidity
-    $('#current-humidity').text('Humidity: ' + data.humidity + '%')
+    $('#current-humidity').text('Humidity: ' + data.humidity + '%');
     // UV Index
-    $('#current-uvindex').text('UV Index: ' + data.uvi)
+    $('#current-uvindex').text('UV Index: ' + data.uvi);
 };
 
 function displayFiveDay(data, city) {
-    console.log(data);
-    console.log(city);
+    var fiveDayEl = $('#five-day-el');
+
+    for (let i = 1; i < 6; i++) {
+        var weatherData = data.daily[i];
+        const divEl = $('<div>');
+        divEl.addClass('col-2 five-day-blocks');
+        // Date
+        var dateCode = new Date(weatherData.dt * 1000);
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+        var month = months[dateCode.getMonth()];
+        var date = dateCode.getDate();
+        var year = dateCode.getFullYear();
+        const dateEl = $('<p>' + month + '/' + date + '/' + year + '</p>')
+        // Icon
+        var iconCode = weatherData.weather[0].icon;
+        var iconSRC = "http://openweathermap.org/img/w/" + iconCode + ".png";
+        const iconEl = $('<img src="'+ iconSRC +'"></img>');
+        // Temp
+        const tempEl = $('<p>Temperate: ' + weatherData.temp.day + ' °F</p>');
+        // Wind
+        const windEl = $('<p>Wind: ' + weatherData.wind_speed + ' MPH</p>');
+        // Humidity
+        const humidityEl = $('<p>Humidity: ' + weatherData.humidity + '%</p>');
+
+        dateEl.appendTo(divEl);
+        iconEl.appendTo(divEl);
+        tempEl.appendTo(divEl);
+        windEl.appendTo(divEl);
+        humidityEl.appendTo(divEl);
+        divEl.appendTo(fiveDayEl);
+    }
 }
 
 // Gets the form element checking for a sumbit on it
