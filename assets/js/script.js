@@ -8,20 +8,20 @@ var getLocation = function (event) {
     var searchUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + citySearch + '&appid=ca767b568b7657c6b5f4da781ac95579'
 
     fetch(searchUrl).then(function (response) {
-        if (response === 404) {
+        if (response.status === 404) {
             return alert('Please enter a valid city');
         } else {
             return response.json();
         }
     }).then(function (data) {
-        if (data) {
+        if (data.status === 404) {
+            return alert('Please enter a valid city');
+        } else {
             searchHistory(citySearch);
             var lat = data.coord.lat;
             var lon = data.coord.lon;
             getWeather(lat, lon, citySearch);
-        } else {
-            return alert('Please enter a valid city');
-        }
+        };
     });
     $("#form-el").trigger("reset")
 };
@@ -31,14 +31,15 @@ function getWeather(lat, lon, city) {
     var searchUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&units=imperial&appid=ca767b568b7657c6b5f4da781ac95579';
 
     fetch(searchUrl).then(function (response) {
-        if (response === 404) {
+        if (response.status === 404) {
             console.log('404 Error');
+            return;
         } else {
             return response.json();
         }
     }).then(function (data) {
         displayCurrentWeather(data.current, city);
-        displayFiveDay(data,city)
+        displayFiveDay(data);
     });
 };
 
@@ -107,8 +108,11 @@ function displayCurrentWeather(data, city) {
     $('#current-uvindex').text('UV Index: ' + data.uvi);
 };
 
-function displayFiveDay(data, city) {
+//Displays the five day forecast from the weather API and uses empty to remove the previous searches elements
+function displayFiveDay(data) {
     var fiveDayEl = $('#five-day-el');
+
+    fiveDayEl.empty();
 
     for (let i = 1; i < 6; i++) {
         var weatherData = data.daily[i];
@@ -116,11 +120,11 @@ function displayFiveDay(data, city) {
         divEl.addClass('col-2 five-day-blocks');
         // Date
         var dateCode = new Date(weatherData.dt * 1000);
-        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         var month = months[dateCode.getMonth()];
         var date = dateCode.getDate();
         var year = dateCode.getFullYear();
-        const dateEl = $('<p>' + month + '/' + date + '/' + year + '</p>')
+        const dateEl = $('<p>' + month + '/' + date + '/' + year + '</p>');
         // Icon
         var iconCode = weatherData.weather[0].icon;
         var iconSRC = "http://openweathermap.org/img/w/" + iconCode + ".png";
@@ -138,8 +142,8 @@ function displayFiveDay(data, city) {
         windEl.appendTo(divEl);
         humidityEl.appendTo(divEl);
         divEl.appendTo(fiveDayEl);
-    }
-}
+    };
+};
 
 // Gets the form element checking for a sumbit on it
 $('#form-el').submit(getLocation);
@@ -161,7 +165,5 @@ $('.history-btn').click(function(e){
     });
 });
 
-// Display 5 day forecast
-// What if input is 2 words?
-
-//BUG: Created buttons will not query a search until the page has been reloaded
+//TODO: How to concat words to be searched properly is they contain more than 2 words
+//TODO: Created buttons will not query a search until the page has been reloaded

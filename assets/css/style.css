@@ -40,5 +40,6 @@ h1 {
 }
 
 .five-day-blocks {
+    border-right: 1px solid black;
     color: blue;
 }
