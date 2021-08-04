@@ -7,7 +7,6 @@ var getLocation = function (event) {
     var citySearch = searchInput.val().trim();
     var searchUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + citySearch + '&appid=ca767b568b7657c6b5f4da781ac95579'
     searchUrl = searchUrl.replace(' ', '+');
-    console.log(searchUrl);
 
     fetch(searchUrl).then(function (response) {
         if (response.status === 404) {
