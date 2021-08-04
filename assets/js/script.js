@@ -1,11 +1,13 @@
 var searchInput = $('#search-input');
 var searchHistoryEl = $('#search-history-element');
 
-// Gets the lat and lon of the location from Open Weather API when input into the search box
+// Gets the lat and lon of the location from Open Weather API when input into the search box, also repalces any spaces in the URL if a two word city is searched
 var getLocation = function (event) {
     event.preventDefault();
     var citySearch = searchInput.val().trim();
     var searchUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + citySearch + '&appid=ca767b568b7657c6b5f4da781ac95579'
+    searchUrl = searchUrl.replace(' ', '+');
+    console.log(searchUrl);
 
     fetch(searchUrl).then(function (response) {
         if (response.status === 404) {
@@ -43,7 +45,7 @@ function getWeather(lat, lon, city) {
     });
 };
 
-// Save search to localStorage, delete at 10 cities
+// Save search to localStorage, deletes from localStorage at 10 cities the most historic save
 function searchHistory(city) {
     const cityHistory = JSON.parse(localStorage.getItem('history')) || [];
     addToHistory(city);
@@ -65,7 +67,7 @@ function displayHistory(searchHistory) {
     });
 };
 
-// Displays a new city in the search history when searched
+// Displays a new city in the search history when searched, prepends the search to have it at the top of the list
 function addToHistory(city) {
     const listItem = $('<li>');
     const btnItem = $('<button>' + city + '</button>');
@@ -73,6 +75,20 @@ function addToHistory(city) {
     btnItem.attr('data-city', city);
     btnItem.appendTo(listItem);
     listItem.prependTo(searchHistoryEl);
+
+    // Gets the weather for cities in the search history on button click
+    $('.history-btn').click(function(e){
+        var citySearch = $(e.target).data('city');
+        var searchUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + citySearch + '&appid=ca767b568b7657c6b5f4da781ac95579'
+
+        fetch(searchUrl).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            var lat = data.coord.lat;
+            var lon = data.coord.lon;
+            getWeather(lat, lon, citySearch)
+        });
+    });
 };
 
 // Removes the last item from the search history if it is over 10 items long
@@ -108,7 +124,7 @@ function displayCurrentWeather(data, city) {
     $('#current-uvindex').text('UV Index: ' + data.uvi);
 };
 
-//Displays the five day forecast from the weather API and uses empty to remove the previous searches elements
+//Displays the five day forecast from the weather API and uses empty to remove the previous searches elements, as well as empties it when a new search is given
 function displayFiveDay(data) {
     var fiveDayEl = $('#five-day-el');
 
@@ -164,6 +180,3 @@ $('.history-btn').click(function(e){
         getWeather(lat, lon, citySearch)
     });
 });
-
-//TODO: How to concat words to be searched properly is they contain more than 2 words
-//TODO: Created buttons will not query a search until the page has been reloaded
